@@ -10,6 +10,7 @@ export default class ArticleController {
   FETCHED_ATTRIBUTE = [
     'title',
     'content',
+    'categories',
   ]
 
   public async index ({ request, response }: HttpContextContract) {

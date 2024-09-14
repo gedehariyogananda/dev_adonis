@@ -23,6 +23,17 @@ export default class Category extends BaseModel {
     return "content.category" // table name
   }
 
+  // many to many setup 
+  @manyToMany(() => Article, {
+    pivotTable: 'content.article_categories',
+    pivotForeignKey: 'category_id',
+    pivotRelatedForeignKey: 'article_id'
+  })
+
+  public articles: ManyToMany<typeof Article>
+
+  // end setup
+
   @beforeCreate()
   public static setUUID(data: Category) {
     const namespace = uuidv4()

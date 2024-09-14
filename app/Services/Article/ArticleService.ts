@@ -31,8 +31,11 @@ export default class ArticleService extends BaseService {
         title: data.title,
         content: data.content,
         user_id : authId,
+        categories: data.categories
       }
-      return await this.repository.store(data)
+
+      return await this.repository.createArticleWithCategory(data)
+
     } catch (error) {
       throw error
     }
