@@ -8,6 +8,7 @@ Route.group(function () {
 
 Route.resource('categories', 'Category/CategoryController')
     .apiOnly()
+    .except(['show'])
     .middleware({
       '*': 'auth',
     })

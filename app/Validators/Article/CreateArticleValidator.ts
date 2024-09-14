@@ -1,5 +1,7 @@
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Account from 'App/Models/Account'
+import Category from 'App/Models/Category/Category'
 
 export default class CreateArticleValidator {
   constructor (protected ctx: HttpContextContract) {
@@ -15,5 +17,15 @@ export default class CreateArticleValidator {
     content: schema.string({ trim: true }, [
       rules.required()
     ]),
+
+    // request array of object
+    categories: schema.array().members(
+      schema.object().members({
+        id: schema.string({}, [
+          rules.exists({ table: Category.table, column: Category.primaryKey })
+        ])
+      })
+    )
   })
 }
+

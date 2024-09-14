@@ -8,6 +8,16 @@ export default class UpdateArticleValidator {
   public reporter = validator.reporters.api
 
   public schema = schema.create({
-    // your validation rules
+    title: schema.string.optional({ trim: true }, [
+      rules.maxLength(255)
+    ]),
+    content: schema.string.optional({ trim: true }),
+    categories: schema.array.optional().members(
+      schema.object().members({
+        id: schema.string({}, [
+          rules.exists({ table: 'categories', column: 'id' })
+        ])
+      })
+    )
   })
 }

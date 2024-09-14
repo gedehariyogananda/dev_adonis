@@ -1,32 +1,23 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import CategoryService from 'App/Services/Category/CategoryService'
-import CreateCategoryValidator from 'App/Validators/Category/CreateCategoryValidator'
-import UpdateCategoryValidator from 'App/Validators/Category/UpdateCategoryValidator'
+import CommentService from 'App/Services/Comment/CommentService'
+import CreateCommentValidator from 'App/Validators/Comment/CreateCommentValidator'
+import UpdateCommentValidator from 'App/Validators/Comment/UpdateCommentValidator'
 import { ValidationException } from '@ioc:Adonis/Core/Validator'
 
-export default class CategoryController {
-  service = new CategoryService()
+export default class CommentController {
+  service = new CommentService()
   FETCHED_ATTRIBUTE = [
-    'name',
-    'description'
+    'article_id',
+    'content',
   ]
 
-  public async index ({ request, response }: HttpContextContract) {
+  public async store ({ auth,request, response }: HttpContextContract) {
     try {
-      const options = request.parseParams(request.all())
-      const result = await this.service.getAll(options)
-      return response.api(result, 'OK', 200, request)
-    } catch (error) {
-      return response.error(error.message)
-    }
-  }
-
-  public async store ({ request, response }: HttpContextContract) {
-    try {
-      await request.validate(CreateCategoryValidator)
+      const authId = auth.user?.id
+      await request.validate(CreateCommentValidator)
       const data = request.only(this.FETCHED_ATTRIBUTE)
-      const result = await this.service.store(data)
-      return response.api(result, 'Category created!', 201)
+      const result = await this.service.storeComment(authId,data)
+      return response.api(result, 'Comment created!', 201)
     } catch (error) {
       if (error instanceof ValidationException) {
         const errorValidation: any = error
@@ -38,13 +29,13 @@ export default class CategoryController {
 
   public async update ({ params, request, response }: HttpContextContract) {
     try {
-      await request.validate(UpdateCategoryValidator)
+      await request.validate(UpdateCommentValidator)
       const data = request.only(this.FETCHED_ATTRIBUTE)
       const result = await this.service.update(params.id, data)
       if (!result) {
-        return response.api(null, `Category with id: ${params.id} not found`)
+        return response.api(null, `Comment with id: ${params.id} not found`)
       }
-      return response.api(result, 'Category updated!')
+      return response.api(result, 'Comment updated!')
     } catch (error) {
       if (error instanceof ValidationException) {
         const errorValidation: any = error
@@ -58,9 +49,9 @@ export default class CategoryController {
     try {
       const result = await this.service.delete(params.id)
       if (!result) {
-        return response.api(null, `Category with id: ${params.id} not found`)
+        return response.api(null, `Comment with id: ${params.id} not found`)
       }
-      return response.api(null, 'Category deleted!')
+      return response.api(null, 'Comment deleted!')
     } catch (error) {
       return response.error(error.message)
     }
@@ -69,7 +60,7 @@ export default class CategoryController {
   public async destroyAll ({ response }: HttpContextContract) {
     try {
       await this.service.deleteAll()
-      return response.api(null, 'All Category deleted!')
+      return response.api(null, 'All Comment deleted!')
     } catch (error) {
       return response.error(error.message)
     }

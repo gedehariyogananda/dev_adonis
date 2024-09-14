@@ -7,7 +7,7 @@ export default class ArticleRepository extends BaseRepository {
     super(Article)
   }
 
-  async createArticleWithCategory(data: any) {
+  async storeArticle(data: any) {
     const trx = await Database.transaction()
 
     try {
@@ -20,7 +20,9 @@ export default class ArticleRepository extends BaseRepository {
       await trx.commit()
 
       // can return with other relation
-      await article.load('categories')
+      await article.load('categories', (query) => {
+        query.select(['id', 'name'])
+      })
       await article.load('user', (query) => {
         query.select(['id', 'username'])
       })
@@ -50,10 +52,16 @@ export default class ArticleRepository extends BaseRepository {
         })
         .preload('user', (query) => {
             query.select(['id', 'username'])
-        }).first()
+        })
+        .preload('comments', (commentQuery) => {
+          commentQuery.select(['id', 'content', 'user_id'])
+          commentQuery.preload('user', (userQuery) => {
+            userQuery.select(['id', 'username'])
+          })
+        })
+        .first()
 
       return article
-      
 
     } catch (error) {
       throw error

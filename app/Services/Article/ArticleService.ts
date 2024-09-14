@@ -28,13 +28,11 @@ export default class ArticleService extends BaseService {
   async addedArticles(authId : any,data: any) {
     try {
       data = {
-        title: data.title,
-        content: data.content,
+        ...data,
         user_id : authId,
-        categories: data.categories
       }
 
-      return await this.repository.createArticleWithCategory(data)
+      return await this.repository.storeArticle(data)
 
     } catch (error) {
       throw error
@@ -50,12 +48,12 @@ export default class ArticleService extends BaseService {
       }
 
       if (article.user_id !== authId) {
+        // forbidden throws
         throw new DefaultException('You are not authorized to update this data', 403)
       }
 
       data = {
-        title: data.title,
-        content: data.content,
+        ...data,
         user_id : authId,
       }
 
@@ -75,6 +73,7 @@ export default class ArticleService extends BaseService {
       }
 
       if (article.user_id !== authId) {
+        // forbidden throws
         throw new DefaultException('You are not authorized to delete this data', 403)
       }
 

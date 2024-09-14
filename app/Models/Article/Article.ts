@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, BelongsTo, belongsTo, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, BelongsTo, belongsTo, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid'
 import Account from '../User/Account'
 import Category from '../Category/Category'
+import Comment from '../Comment/Comment'
 
 export default class Article extends BaseModel {
   @column({ isPrimary: true })
@@ -47,6 +48,11 @@ export default class Article extends BaseModel {
   })
 
   public categories: ManyToMany<typeof Category>
-
   // end setup
+
+  @hasMany(() => Comment, {
+    foreignKey: 'article_id'
+  })
+
+  public comments: HasMany<typeof Comment>
 }
