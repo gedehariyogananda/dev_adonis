@@ -44,9 +44,12 @@ export default class ArticleRepository extends BaseRepository {
         this.model = this.model.whereNull('deleted_at')
       }
 
-      const article = await this.model.preload('user', (query) => {
+      const article = await this.model.first()
+
+      await article?.load('categories')
+      await article?.load('user', (query) => {
         query.select(['id', 'username'])
-      }).first()
+      })
 
       return article
       
