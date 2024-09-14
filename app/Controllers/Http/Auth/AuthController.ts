@@ -9,7 +9,16 @@ export default class AuthController {
 
   public async login ({ auth, request, response }: HttpContextContract) {
     try {
-      const credentials = this.getBasicAuth(request.header('authorization'))
+      const reqHeader = request.header('authorization')
+
+      let credentials = {}
+
+      if(reqHeader){
+        credentials = this.getBasicAuth(reqHeader)
+      } else {
+        credentials = request.only(['email', 'password'])
+      }
+      
       const rememberMe = request.body().remember_me ?? false
       const token = await this.service.login(credentials, auth, rememberMe)
       return response.api(token, 'OK', 200, request)
