@@ -51,22 +51,15 @@ export default class CommentController {
     }
   }
 
-  public async destroy ({ params, response }: HttpContextContract) {
+  public async destroy ({ auth,params, response }: HttpContextContract) {
     try {
-      const result = await this.service.delete(params.id)
+      const authId = auth.user?.id
+
+      const result = await this.service.deleteComment(authId,params.id)
       if (!result) {
         return response.api(null, `Comment with id: ${params.id} not found`)
       }
       return response.api(null, 'Comment deleted!')
-    } catch (error) {
-      return response.error(error.message)
-    }
-  }
-
-  public async destroyAll ({ response }: HttpContextContract) {
-    try {
-      await this.service.deleteAll()
-      return response.api(null, 'All Comment deleted!')
     } catch (error) {
       return response.error(error.message)
     }

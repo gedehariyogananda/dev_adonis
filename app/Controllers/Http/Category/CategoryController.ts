@@ -65,13 +65,4 @@ export default class CategoryController {
       return response.error(error.message)
     }
   }
-
-  public async destroyAll ({ response }: HttpContextContract) {
-    try {
-      await this.service.deleteAll()
-      return response.api(null, 'All Category deleted!')
-    } catch (error) {
-      return response.error(error.message)
-    }
-  }
 }

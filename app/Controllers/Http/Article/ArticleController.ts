@@ -101,13 +101,4 @@ export default class ArticleController {
       return response.error(error.message)
     }
   }
-
-  public async destroyAll ({ response }: HttpContextContract) {
-    try {
-      await this.service.deleteAll()
-      return response.api(null, 'All Article deleted!')
-    } catch (error) {
-      return response.error(error.message)
-    }
-  }
 }

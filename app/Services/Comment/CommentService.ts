@@ -44,5 +44,23 @@ export default class CommentService extends BaseService {
       throw error
     }
   }
+
+  async deleteComment(authId : any,commentId: any) {
+    try {
+      const comment = await this.repository.find(commentId)
+
+      if (!comment) {
+        throw new DefaultException('Data not found', 404)
+      }
+
+      if (comment.user_id !== authId) {
+        throw new DefaultException('You are not authorized to delete this data', 403)
+      }
+
+      return await this.repository.delete(commentId)
+    } catch (error) {
+      throw error
+    }
+  }
 }
     
