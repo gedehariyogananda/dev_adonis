@@ -55,4 +55,6 @@ export default class Article extends BaseModel {
   })
 
   public comments: HasMany<typeof Comment>
+
+  
 }

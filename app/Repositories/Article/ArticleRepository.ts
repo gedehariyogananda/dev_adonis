@@ -54,7 +54,6 @@ export default class ArticleRepository extends BaseRepository {
             query.select(['id', 'username'])
         })
         .preload('comments', (commentQuery) => {
-          commentQuery.select(['id', 'content', 'user_id'])
           commentQuery.preload('user', (userQuery) => {
             userQuery.select(['id', 'username'])
           })

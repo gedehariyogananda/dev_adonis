@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, belongsTo, BelongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid'
 import Account from '../User/Account'
 import Article from '../Article/Article'
@@ -22,6 +22,12 @@ export default class Comment extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updated_at: DateTime
+
+  // add compute was editted comments
+  @computed()
+  public get isEdittedComment() {
+    return this.updated_at > this.created_at
+  }
 
   static get table() {
     return "content.comment" // table name
