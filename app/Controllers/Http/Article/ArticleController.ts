@@ -11,6 +11,7 @@ export default class ArticleController {
     'title',
     'content',
     'categories',
+    'article_img',
   ]
 
   public async index ({ request, response }: HttpContextContract) {
@@ -26,10 +27,11 @@ export default class ArticleController {
   public async store ({ auth ,request, response }: HttpContextContract) {
     try {
       const authId = auth.user?.id
+      const articleImg = request.files('article_img')
 
       await request.validate(CreateArticleValidator)
       const data = request.only(this.FETCHED_ATTRIBUTE)
-      const result = await this.service.addedArticles(authId,data)
+      const result = await this.service.addedArticles(authId,data, articleImg)
 
       return response.api(result, 'Article created!', 201)
     } catch (error) {

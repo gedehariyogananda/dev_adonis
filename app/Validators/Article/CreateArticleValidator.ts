@@ -25,6 +25,14 @@ export default class CreateArticleValidator {
           rules.exists({ table: Category.table, column: Category.primaryKey })
         ])
       })
+    ),
+
+    // request array schema file object
+    article_img : schema.array.optional().members(
+      schema.file({
+        size: '2mb',
+        extnames: ['jpg', 'png', 'jpeg']
+      })
     )
   })
 }

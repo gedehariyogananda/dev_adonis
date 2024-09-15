@@ -1,10 +1,17 @@
 import BaseService from "App/Base/Services/BaseService"
 import DefaultException from "App/Exceptions/DefaultException"
+import ArticleImageRepository from "App/Repositories/Article/ArticleImageRepository"
 import ArticleRepository from "App/Repositories/Article/ArticleRepository"
+import Env from '@ioc:Adonis/Core/Env'
+import { generateHashNameFile } from "App/Utils/HashFileNameUtil"
 
 export default class ArticleService extends BaseService {
+
+  articleImageRepository: ArticleImageRepository
+
   constructor() {
     super(new ArticleRepository())
+    this.articleImageRepository = new ArticleImageRepository()
   }
 
   async spesifyArticleUser(id: any, options : any = {}) {
@@ -25,14 +32,39 @@ export default class ArticleService extends BaseService {
 
   }
 
-  async addedArticles(authId : any,data: any) {
+  async addedArticles(authId : any,data: any, articlesImg: any) {
     try {
       data = {
         ...data,
         user_id : authId,
       }
 
-      return await this.repository.storeArticle(data)
+      const storeArticle = await this.repository.storeArticle(data)
+
+      if (storeArticle) {
+        if (articlesImg && articlesImg.length > 0) {
+          const articleId = storeArticle.id
+
+          await Promise.all(
+            articlesImg.map(async (img: any) => {
+              const pathInit = 'articles'
+              const hashedFileName = generateHashNameFile(img.extname)
+               
+              // saved to disk local to accessbility public path
+              await img.moveToDisk(pathInit, {
+                name: hashedFileName,
+                overwrite: true,
+              }, 'local');
+          
+              const path = Env.get('BASE_PATH_LOCAL') + '/' + pathInit + '/' + hashedFileName
+
+              await this.articleImageRepository.storeArticleImage(articleId, path)
+            })
+          )
+        }
+
+        return storeArticle
+      }
 
     } catch (error) {
       throw error
@@ -83,5 +115,6 @@ export default class ArticleService extends BaseService {
       throw error
     }
   }
+
 }
     
