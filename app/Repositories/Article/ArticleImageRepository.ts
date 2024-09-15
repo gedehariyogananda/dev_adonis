@@ -18,5 +18,14 @@ export default class ArticleImageRepository extends BaseRepository {
       throw error
     }
   }
+
+  async findImageByArticleId(articleId: any) {
+    try {
+      const articleImages = await this.model.query().where('article_id', articleId)
+      return articleImages
+    } catch (error) {
+      throw error
+    }
+  }
 }
     

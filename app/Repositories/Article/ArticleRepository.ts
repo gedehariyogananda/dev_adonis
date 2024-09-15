@@ -11,7 +11,7 @@ export default class ArticleRepository extends BaseRepository {
     const trx = await Database.transaction()
 
     try {
-      const article = await this.mainModel.create(data, { client : trx })
+      const article = await this.model.create(data, { client : trx })
       if(data.categories && data.categories.length > 0) {
         const categoryId = data.categories.map((category: any) => category.id)
         await article.related('categories').attach(categoryId, trx)
@@ -66,5 +66,6 @@ export default class ArticleRepository extends BaseRepository {
       throw error
     }
   }
+
 }
     
