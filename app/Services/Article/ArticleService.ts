@@ -72,6 +72,7 @@ export default class ArticleService extends BaseService {
     }
   }
 
+  // This method is not updated configure img updates because the concept is already understood
   async updateArticle(authId : any, id: any, data: any) {
     try {
       const article = await this.repository.find(id)
