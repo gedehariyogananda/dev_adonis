@@ -31,7 +31,10 @@ export default class UpdateAccountValidator {
     fullname: schema.string.optional({}, [
       rules.maxLength(100)
     ]),
-    avatar: schema.string.optional(),
+    avatar: schema.file.optional({
+      size: '2mb',
+      extnames: ['jpg', 'png', 'jpeg']
+    }),
     is_ban: schema.boolean.optional(),
   })
 }

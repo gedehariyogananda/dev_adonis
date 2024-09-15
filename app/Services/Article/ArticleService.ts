@@ -58,7 +58,7 @@ export default class ArticleService extends BaseService {
                 overwrite: true,
               }, 'local');
           
-              const pathImage = path.join(Env.get('BASE_PATH_LOCAL'), pathInit, hashedFileName);
+              const pathImage = path.join(pathInit, hashedFileName);
               await this.articleImageRepository.storeArticleImage(articleId, pathImage)
             })
           )
@@ -119,7 +119,7 @@ export default class ArticleService extends BaseService {
 
       if (Array.isArray(imageInit) && imageInit.length > 0) {
         await Promise.all(imageInit.map(async (img: any) => {
-          const pathPublicImage = path.join('public', img.article_img)
+          const pathPublicImage = path.join('public',Env.get('BASE_PATH_LOCAL'), img.article_img)
           if (fs.existsSync(pathPublicImage)) {
             fs.unlinkSync(pathPublicImage);
           }

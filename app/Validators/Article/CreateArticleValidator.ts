@@ -1,6 +1,5 @@
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Account from 'App/Models/Account'
 import Category from 'App/Models/Category/Category'
 
 export default class CreateArticleValidator {

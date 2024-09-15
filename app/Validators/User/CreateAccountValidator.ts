@@ -31,7 +31,10 @@ export default class CreateAccountValidator {
     fullname: schema.string({}, [
       rules.maxLength(100)
     ]),
-    avatar: schema.string.optional(),
+    avatar: schema.file({
+      size: '2mb',
+      extnames: ['jpg', 'png', 'jpeg']
+    }),
     is_ban: schema.boolean.optional(),
   })
 }

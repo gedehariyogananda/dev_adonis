@@ -29,9 +29,11 @@ export default class AccountController {
 
   public async store ({ request, response }: HttpContextContract) {
     try {
+      const avatar = request.file('avatar')
+
       await request.validate(CreateAccountValidator)
       const data = request.only(this.FETCHED_ATTRIBUTE)
-      const result = await this.service.store(data)
+      const result = await this.service.storeAccount(data, avatar)
       return response.api(result, 'Account created!', 201)
     } catch (error) {
       if (error instanceof ValidationException) {
